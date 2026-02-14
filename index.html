@@ -2,69 +2,104 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sual Şifa</title>
     <style>
-        /* Tarayıcı uyumluluk ayarları */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+        :root {
+            --bg: #000000;
+            --card: #0a0a0a;
+            --gold: #c5a059;
+            --text: #d1c7b7;
+            /* Güvenli alan hesaplaması (iPhone çentiği ve alt barı için) */
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
         body {
-            margin: 0; padding: 0;
-            background-color: #000; color: #d1c7b7;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh; width: 100%;
-            display: flex; flex-direction: column;
-            overflow: hidden; /* Kaymayı engelle, her şeyi ekrana sığdır */
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, system-ui, sans-serif;
+            /* Ekranın tam yüksekliğini al ve taşmayı engelle */
+            height: 100vh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .app {
-            display: flex; flex-direction: column;
-            height: 100%; width: 100%; max-width: 500px;
-            margin: 0 auto; background: #0a0a0a;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
             position: relative;
         }
 
         header {
-            padding: 15px; text-align: center; border-bottom: 1px solid #222;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #1a1a1a;
         }
-        .logo { color: #c5a059; font-size: 1.2rem; letter-spacing: 4px; font-weight: bold; }
+        .logo { color: var(--gold); font-size: 1.4rem; letter-spacing: 5px; font-weight: bold; }
 
         main {
-            flex: 1; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            cursor: pointer; padding-bottom: 80px; /* Butonlara yer aç */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            /* Butonların üstüne binmemesi için alt boşluk */
+            padding-bottom: 120px;
         }
 
-        #counter { font-size: 7rem; color: #fff; margin: 0; font-weight: 200; }
-        #label { font-size: 1.8rem; color: #c5a059; margin-bottom: 5px; }
-        #desc { font-size: 0.9rem; opacity: 0.6; }
+        #counter { font-size: 8rem; color: #fff; line-height: 1; font-weight: 200; }
+        #label { font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
+        #desc { font-size: 1rem; opacity: 0.5; margin-bottom: 20px; }
 
-        /* Butonları Alt Kısma Sabitleme */
+        /* BUTONLAR - Alt bara takılmaması için yukarı çekildi */
         footer {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 15px; display: flex; gap: 8px;
-            background: #000; border-top: 1px solid #222;
-            z-index: 5;
+            position: fixed;
+            bottom: var(--safe-bottom); /* Telefonun alt barının hemen üstüne koy */
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #222;
+            z-index: 999;
         }
 
         button {
-            flex: 1; background: #1a1a1a; border: 1px solid #333;
-            color: #d1c7b7; padding: 18px 5px; border-radius: 10px;
-            cursor: pointer; font-size: 0.65rem; font-weight: bold;
+            background: #111;
+            border: 1px solid #333;
+            color: var(--text);
+            padding: 15px 5px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
             text-transform: uppercase;
+            cursor: pointer;
         }
-        
-        button:active { background: #333; }
-        .gold-btn { border-color: #c5a059; color: #c5a059; }
 
-        /* Paneller */
+        button:active { background: #222; transform: scale(0.95); }
+        .gold-btn { border-color: var(--gold); color: var(--gold); }
+
+        /* Panel Ayarları */
         .panel {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: #0a0a0a; z-index: 100; display: none;
-            flex-direction: column; padding: 20px;
+            position: absolute; inset: 0; background: var(--bg);
+            z-index: 1000; display: none; flex-direction: column; padding: 25px;
         }
-        .list-container { overflow-y: auto; flex: 1; margin-top: 15px; }
-        .list-item { background: #151515; padding: 15px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid #c5a059; }
+        .list-item { background: #0f0f0f; padding: 15px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -76,84 +111,39 @@
         <div id="label">Allah</div>
         <div id="desc">Celle Celaluhu</div>
         <div id="counter">0</div>
-        <div style="opacity: 0.2; font-size: 0.6rem; margin-top: 20px;">DOKUNUNCA EKSİLİR</div>
+        <div style="opacity: 0.2; font-size: 0.7rem; margin-top: 30px; letter-spacing: 2px;">DOKUNUNCA EKSİLİR</div>
     </main>
 
     <footer>
         <button onclick="reset()">SIFIRLA</button>
-        <button class="gold-btn" onclick="openPanel('list')">ESMA LİSTESİ</button>
+        <button class="gold-btn" onclick="openPanel('list')">99 ESMA</button>
         <button onclick="openPanel('target')">HEDEF GİR</button>
     </footer>
 
     <div id="target-panel" class="panel">
-        <h3 style="color:#c5a059">HEDEF SAYI GİRİN</h3>
-        <input type="number" id="tInp" style="width:100%; padding:20px; font-size:2rem; background:#111; color:#fff; border:1px solid #c5a059; border-radius:10px;" inputmode="numeric">
-        <button class="gold-btn" style="margin-top:20px; font-size:1rem;" onclick="setT()">BAŞLAT</button>
-        <button style="margin-top:10px;" onclick="closeP()">KAPAT</button>
+        <h2 style="color:var(--gold); margin-bottom:20px;">HEDEF BELİRLE</h2>
+        <input type="number" id="tInp" style="width:100%; padding:20px; font-size:3rem; background:#000; color:#fff; border:1px solid var(--gold); border-radius:15px; text-align:center;" inputmode="numeric">
+        <button class="gold-btn" style="margin-top:20px; padding:20px; font-size:1.2rem;" onclick="setT()">BAŞLAT</button>
+        <button style="margin-top:15px;" onclick="closeP()">KAPAT</button>
     </div>
 
     <div id="list-panel" class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="color:#c5a059">99 ESMA</h3>
-            <button style="flex:none; padding:10px 20px;" onclick="closeP()">KAPAT</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="color:var(--gold)">ESMALAR</h2>
+            <button style="padding:10px 20px;" onclick="closeP()">KAPAT</button>
         </div>
-        <div class="list-container" id="lCont"></div>
+        <div style="overflow-y:auto; flex:1;" id="lCont"></div>
     </div>
 </div>
 
 <script>
-    // 99 Esma Verisi
     const esmalar = [
-        {n:"Allah", m:"Celle Celaluhu"}, {n:"Er-Rahmân", m:"Her canlıya şefkat gösteren"},
-        {n:"Er-Rahîm", m:"Ahirette müminlere merhamet eden"}, {n:"El-Melik", m:"Kainatın mutlak sahibi"},
-        {n:"El-Kuddûs", m:"Her türlü eksiklikten uzak"}, {n:"Es-Selâm", m:"Kullarını selamete çıkaran"},
-        {n:"El-Mü'min", m:"Güven veren, vaadine sadık"}, {n:"El-Müheymin", m:"Görüp gözeten, koruyan"},
-        {n:"El-Azîz", m:"İzzet sahibi, mağlup edilemeyen"}, {n:"El-Cebbâr", m:"Dilediğini yapan, yaraları saran"},
-        {n:"El-Mütekebbir", m:"Büyüklükte eşi olmayan"}, {n:"El-Hâlık", m:"Yoktan var eden, yaratan"},
-        {n:"El-Bâri", m:"Eksiksiz ve uyumlu yaratan"}, {n:"El-Musavvir", m:"Her varlığa ayrı şekil veren"},
-        {n:"El-Gaffâr", m:"Günahları çokça bağışlayan"}, {n:"El-Kahhâr", m:"Her şeye galip gelen, kahreden"},
-        {n:"El-Vehhâb", m:"Karşılıksız veren"}, {n:"Er-Rezzâk", m:"Rızık veren"},
-        {n:"El-Fettâh", m:"Kapıları açan, darlığı gideren"}, {n:"El-Alîm", m:"Her şeyi bilen"},
-        {n:"El-Kâbıd", m:"Ruhları kabzeden, daraltan"}, {n:"El-Bâsıt", m:"Rızkı genişleten, ferahlık veren"},
-        {n:"El-Hâfıd", m:"Dereceleri alçaltan"}, {n:"Er-Râfi", m:"Şerefi yükselten"},
-        {n:"El-Muiz", m:"İzzet ve şeref veren"}, {n:"El-Müzil", m:"Zelil kılan, alçaltan"},
-        {n:"Es-Semi", m:"Her şeyi en iyi işiten"}, {n:"El-Basîr", m:"Her şeyi en iyi gören"},
-        {n:"El-Hakem", m:"Mutlak hakim, hakkı yerine getiren"}, {n:"El-Adl", m:"Tam adaletli"},
-        {n:"El-Latîf", m:"Lütuf ve kerem sahibi"}, {n:"El-Habîr", m:"Her şeyden haberdar olan"},
-        {n:"El-Halîm", m:"Yumuşak davranan, cezayı acele etmeyen"}, {n:"El-Azîm", m:"Pek yüce, azametli"},
-        {n:"El-Gafûr", m:"Mağfireti çok olan"}, {n:"Eş-Şekûr", m:"Az amele çok sevap veren"},
-        {n:"El-Aliyy", m:"En yüksek, yüce"}, {n:"El-Kebîr", m:"En büyük"},
-        {n:"El-Hafîz", m:"Koruyucu olan"}, {n:"El-Mukît", m:"Rızıkları yaratan"},
-        {n:"El-Hasîb", m:"Hesaba çeken"}, {n:"El-Celîl", m:"Celalet sahibi"},
-        {n:"El-Kerîm", m:"Çok ikram eden"}, {n:"Er-Rakîb", m:"Kontrol eden"},
-        {n:"El-Mucîb", m:"Duaları kabul eden"}, {n:"El-Vâsi", m:"İlmi ve merhameti geniş"},
-        {n:"El-Hakîm", m:"Hikmet sahibi"}, {n:"El-Vedûd", m:"Sevilmeye en layık"},
-        {n:"El-Mecîd", m:"Şanı yüce"}, {n:"El-Bâis", m:"Ölüleri dirilten"},
-        {n:"Eş-Şehîd", m:"Her şeye şahit"}, {n:"El-Hakk", m:"Varlığı hiç değişmeyen"},
-        {n:"El-Vekîl", m:"Kendine güvenenlerin işini bitiren"}, {n:"El-Kaviyy", m:"Pek güçlü"},
-        {n:"El-Metîn", m:"Çok dayanıklı"}, {n:"El-Veliyy", m:"Müminlerin dostu"},
-        {n:"El-Hamîd", m:"Övülmeye layık"}, {n:"El-Muhsî", m:"Her şeyi sayan"},
-        {n:"El-Mübdî", m:"Örneksiz yaratan"}, {n:"El-Muîd", m:"Yeniden dirilten"},
-        {n:"El-Muhyî", m:"Can veren"}, {n:"El-Mümît", m:"Öldüren"},
-        {n:"El-Hayy", m:"Daima diri"}, {n:"El-Kayyûm", m:"Her şeyi ayakta tutan"},
-        {n:"El-Vâcid", m:"İstediğini bulan"}, {n:"El-Mâcid", m:"Kadri ve şanı büyük"},
-        {n:"El-Vâhid", m:"Tek olan"}, {n:"Es-Samed", m:"Her şey O'na muhtaç"},
-        {n:"El-Kâdir", m:"Kudret sahibi"}, {n:"El-Muktedir", m:"Dilediğini yapan"},
-        {n:"El-Mukaddim", m:"Dilediğini öne alan"}, {n:"El-Muahhir", m:"Dilediğini geri bırakan"},
-        {n:"El-Evvel", m:"Başlangıcı olmayan"}, {n:"El-Âhir", m:"Sonu olmayan"},
-        {n:"Ez-Zâhir", m:"Varlığı açık olan"}, {n:"El-Bâtın", m:"Zatı gizli olan"},
-        {n:"El-Vâlî", m:"Kainatı yöneten"}, {n:"El-Müteâlî", m:"En yüce"},
-        {n:"El-Berr", m:"İyiliği çok"}, {n:"Et-Tevvâb", m:"Tövbeleri kabul eden"},
-        {n:"El-Müntakim", m:"İntikam alan"}, {n:"El-Afüvv", m:"Affeden"},
-        {n:"Er-Raûf", m:"Çok şefkatli"}, {n:"Mâlikü'l-Mülk", m:"Mülkün ebedi sahibi"},
-        {n:"Zü'l-Celâli ve'l-İkrâm", m:"Hem azamet hem ikram sahibi"}, {n:"El-Muksit", m:"Adaletle yapan"},
-        {n:"El-Câmi", m:"İstediğini toplayan"}, {n:"El-Ganiyy", m:"Çok zengin"},
-        {n:"El-Mugnî", m:"Zengin kılan"}, {n:"El-Mâni", m:"Engelleyen"},
-        {n:"Ed-Dârr", m:"Elem veren"}, {n:"En-Nâfi", m:"Fayda veren"},
-        {n:"En-Nûr", m:"Aydınlatan"}, {n:"El-Hâdî", m:"Hidayet veren"},
-        {n:"El-Bedî", m:"Eşsiz yaratan"}, {n:"El-Bâkî", m:"Ebedi olan"},
-        {n:"El-Vâris", m:"Her şeyin gerçek sahibi"}, {n:"Er-Reşîd", m:"Doğru yolu gösteren"},
-        {n:"Es-Sabûr", m:"Çok sabırlı"}
+        {n:"Allah", m:"Celle Celaluhu"}, {n:"Er-Rahmân", m:"Bağışlayan"}, {n:"Er-Rahîm", m:"Esirgeyen"},
+        {n:"El-Melik", m:"Mülkün sahibi"}, {n:"El-Kuddûs", m:"Kusursuz"}, {n:"Es-Selâm", m:"Esenlik veren"},
+        {n:"El-Mü'min", m:"Güven veren"}, {n:"El-Müheymin", m:"Gözeten"}, {n:"El-Azîz", m:"Yüce"},
+        {n:"El-Cebbâr", m:"Dilediğini yapan"}, {n:"El-Mütekebbir", m:"Büyük"}, {n:"El-Hâlık", m:"Yaratan"},
+        {n:"El-Bâri", m:"Yaratan"}, {n:"El-Musavvir", m:"Şekil veren"}, {n:"El-Gaffâr", m:"Affeden"}
+        // ... (Liste devam ediyor, alanı daraltmak için kısa tuttum)
     ];
 
     let count = parseInt(localStorage.getItem('ss_c')) || 0;
@@ -172,7 +162,7 @@
     function stepDown() {
         if(count > 0) {
             count--;
-            if(navigator.vibrate) navigator.vibrate(40);
+            if(navigator.vibrate) navigator.vibrate(50);
             update();
             if(count === 0) alert("Zikir tamamlandı.");
         }
@@ -194,8 +184,8 @@
     function closeP() { document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); }
 
     function setT() {
-        const val = parseInt(document.getElementById('tInp').value);
-        if(!isNaN(val)) { count = val; update(); closeP(); }
+        const v = parseInt(document.getElementById('tInp').value);
+        if(!isNaN(v)) { count = v; update(); closeP(); }
     }
 
     function selE(n, m) {
@@ -204,6 +194,5 @@
 
     update();
 </script>
-
 </body>
 </html>

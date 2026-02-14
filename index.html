@@ -3,74 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sual Şifa - 99 Esma</title>
+    <title>Sual Şifa</title>
     <style>
-        :root {
-            --bg: #080808;
-            --gold: #c5a059;
-            --text: #d1c7b7;
-            --card: #121212;
-        }
+        /* Tarayıcı uyumluluk ayarları */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            margin: 0; background-color: #000; color: var(--text);
-            font-family: 'Segoe UI', system-ui, sans-serif; height: 100vh; 
-            display: flex; justify-content: center; overflow: hidden;
+            margin: 0; padding: 0;
+            background-color: #000; color: #d1c7b7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh; width: 100%;
+            display: flex; flex-direction: column;
+            overflow: hidden; /* Kaymayı engelle, her şeyi ekrana sığdır */
         }
+
         .app {
-            width: 100%; max-width: 500px; background: var(--bg);
-            display: flex; flex-direction: column; position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+            height: 100%; width: 100%; max-width: 500px;
+            margin: 0 auto; background: #0a0a0a;
+            position: relative;
         }
+
         header {
-            padding: 15px; text-align: center; border-bottom: 1px solid #1a1a1a;
+            padding: 15px; text-align: center; border-bottom: 1px solid #222;
         }
-        .logo { color: var(--gold); font-size: 1.2rem; letter-spacing: 6px; font-weight: 200; }
-        
+        .logo { color: #c5a059; font-size: 1.2rem; letter-spacing: 4px; font-weight: bold; }
+
         main {
-            flex: 1; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; cursor: pointer;
-            transition: background 0.2s;
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            cursor: pointer; padding-bottom: 80px; /* Butonlara yer aç */
         }
-        main:active { background: rgba(197, 160, 89, 0.05); }
 
-        #counter { font-size: clamp(5rem, 20vh, 9rem); color: #fff; margin: 0; font-weight: 100; }
-        #label { font-size: 2rem; color: var(--gold); margin-bottom: 5px; font-weight: 400; }
-        #desc { font-size: 0.9rem; opacity: 0.5; font-style: italic; text-align: center; padding: 0 30px; line-height: 1.4; }
+        #counter { font-size: 7rem; color: #fff; margin: 0; font-weight: 200; }
+        #label { font-size: 1.8rem; color: #c5a059; margin-bottom: 5px; }
+        #desc { font-size: 0.9rem; opacity: 0.6; }
 
+        /* Butonları Alt Kısma Sabitleme */
         footer {
-            padding: 15px; display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 10px;
-            background: #000; border-top: 1px solid #1a1a1a;
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 15px; display: flex; gap: 8px;
+            background: #000; border-top: 1px solid #222;
+            z-index: 5;
         }
+
         button {
-            background: #111; border: 1px solid #222; color: var(--text);
-            padding: 15px 5px; border-radius: 12px; cursor: pointer; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 1px;
+            flex: 1; background: #1a1a1a; border: 1px solid #333;
+            color: #d1c7b7; padding: 18px 5px; border-radius: 10px;
+            cursor: pointer; font-size: 0.65rem; font-weight: bold;
+            text-transform: uppercase;
         }
-        .gold-btn { border-color: var(--gold); color: var(--gold); font-weight: bold; }
-        button:active { transform: scale(0.95); background: #1a1a1a; }
-
-        .panel {
-            position: absolute; inset: 0; background: var(--bg);
-            z-index: 20; display: none; flex-direction: column;
-        }
-        .panel-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
-        .panel-content { flex: 1; overflow-y: auto; padding: 15px; }
         
-        .list-item { 
-            background: var(--card); padding: 18px; border-radius: 12px; 
-            margin-bottom: 10px; border-left: 4px solid var(--gold);
-            cursor: pointer;
-        }
-        .list-item b { color: var(--gold); font-size: 1.1rem; }
-        .list-item div { font-size: 0.85rem; opacity: 0.7; margin-top: 5px; }
+        button:active { background: #333; }
+        .gold-btn { border-color: #c5a059; color: #c5a059; }
 
-        .input-group { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        input { 
-            width: 80%; padding: 20px; font-size: 3rem; text-align: center; 
-            background: #000; border: 1px solid var(--gold); color: #fff; 
-            border-radius: 15px; outline: none;
+        /* Paneller */
+        .panel {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: #0a0a0a; z-index: 100; display: none;
+            flex-direction: column; padding: 20px;
         }
+        .list-container { overflow-y: auto; flex: 1; margin-top: 15px; }
+        .list-item { background: #151515; padding: 15px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid #c5a059; }
     </style>
 </head>
 <body>
@@ -82,32 +76,33 @@
         <div id="label">Allah</div>
         <div id="desc">Celle Celaluhu</div>
         <div id="counter">0</div>
-        <div style="opacity: 0.2; font-size: 0.6rem; letter-spacing: 2px;">DOKUNUNCA EKSİLİR</div>
+        <div style="opacity: 0.2; font-size: 0.6rem; margin-top: 20px;">DOKUNUNCA EKSİLİR</div>
     </main>
 
     <footer>
         <button onclick="reset()">SIFIRLA</button>
-        <button class="gold-btn" onclick="openPanel('list')">99 ESMA LİSTESİ</button>
+        <button class="gold-btn" onclick="openPanel('list')">ESMA LİSTESİ</button>
         <button onclick="openPanel('target')">HEDEF GİR</button>
     </footer>
 
     <div id="target-panel" class="panel">
-        <div class="panel-header"><span>HEDEF BELİRLE</span><button onclick="closePanels()">İPTAL</button></div>
-        <div class="panel-content">
-            <div class="input-group">
-                <input type="number" id="targetInput" placeholder="0" inputmode="numeric" pattern="\d*">
-                <button class="gold-btn" style="margin-top:30px; width: 80%; font-size: 1rem;" onclick="setTarget()">BAŞLAT</button>
-            </div>
-        </div>
+        <h3 style="color:#c5a059">HEDEF SAYI GİRİN</h3>
+        <input type="number" id="tInp" style="width:100%; padding:20px; font-size:2rem; background:#111; color:#fff; border:1px solid #c5a059; border-radius:10px;" inputmode="numeric">
+        <button class="gold-btn" style="margin-top:20px; font-size:1rem;" onclick="setT()">BAŞLAT</button>
+        <button style="margin-top:10px;" onclick="closeP()">KAPAT</button>
     </div>
 
     <div id="list-panel" class="panel">
-        <div class="panel-header"><span>ESMAÜL HÜSNA</span><button onclick="closePanels()">KAPAT</button></div>
-        <div class="panel-content" id="esmaList"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="color:#c5a059">99 ESMA</h3>
+            <button style="flex:none; padding:10px 20px;" onclick="closeP()">KAPAT</button>
+        </div>
+        <div class="list-container" id="lCont"></div>
     </div>
 </div>
 
 <script>
+    // 99 Esma Verisi
     const esmalar = [
         {n:"Allah", m:"Celle Celaluhu"}, {n:"Er-Rahmân", m:"Her canlıya şefkat gösteren"},
         {n:"Er-Rahîm", m:"Ahirette müminlere merhamet eden"}, {n:"El-Melik", m:"Kainatın mutlak sahibi"},
@@ -161,17 +156,17 @@
         {n:"Es-Sabûr", m:"Çok sabırlı"}
     ];
 
-    let count = parseInt(localStorage.getItem('ss_v4_c')) || 0;
-    let name = localStorage.getItem('ss_v4_n') || "Allah";
-    let mean = localStorage.getItem('ss_v4_m') || "Celle Celaluhu";
+    let count = parseInt(localStorage.getItem('ss_c')) || 0;
+    let name = localStorage.getItem('ss_n') || "Allah";
+    let mean = localStorage.getItem('ss_m') || "Celle Celaluhu";
 
     function update() {
         document.getElementById('counter').innerText = count;
         document.getElementById('label').innerText = name;
         document.getElementById('desc').innerText = mean;
-        localStorage.setItem('ss_v4_c', count);
-        localStorage.setItem('ss_v4_n', name);
-        localStorage.setItem('ss_v4_m', mean);
+        localStorage.setItem('ss_c', count);
+        localStorage.setItem('ss_n', name);
+        localStorage.setItem('ss_m', mean);
     }
 
     function stepDown() {
@@ -179,10 +174,7 @@
             count--;
             if(navigator.vibrate) navigator.vibrate(40);
             update();
-            if(count === 0) {
-                if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                setTimeout(()=>alert("Zikir tamamlandı."), 100);
-            }
+            if(count === 0) alert("Zikir tamamlandı.");
         }
     }
 
@@ -191,35 +183,23 @@
     function openPanel(id) {
         document.getElementById(id + '-panel').style.display = 'flex';
         if(id === 'list') {
-            const container = document.getElementById('esmaList');
-            container.innerHTML = esmalar.map(e => `
-                <div class="list-item" onclick="selectEsma('${e.n}', '${e.m}')">
-                    <b>${e.n}</b>
-                    <div>${e.m}</div>
+            document.getElementById('lCont').innerHTML = esmalar.map(e => `
+                <div class="list-item" onclick="selE('${e.n}', '${e.m}')">
+                    <b>${e.n}</b><br><small>${e.m}</small>
                 </div>
             `).join('');
         }
     }
 
-    function closePanels() {
-        document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+    function closeP() { document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); }
+
+    function setT() {
+        const val = parseInt(document.getElementById('tInp').value);
+        if(!isNaN(val)) { count = val; update(); closeP(); }
     }
 
-    function setTarget() {
-        const input = document.getElementById('targetInput');
-        const val = parseInt(input.value);
-        if(!isNaN(val) && val > 0) {
-            count = val;
-            update();
-            closePanels();
-            input.value = "";
-        }
-    }
-
-    function selectEsma(n, m) {
-        name = n; mean = m; count = 0;
-        update();
-        closePanels();
+    function selE(n, m) {
+        name = n; mean = m; count = 0; update(); closeP();
     }
 
     update();

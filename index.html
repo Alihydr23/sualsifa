@@ -10,29 +10,26 @@
         :root { --gold: #c5a059; --bg: #000; --text: #d1c7b7; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { height: 100dvh; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
-        header { padding: 15px 0; text-align: center; }
-        .logo-img { height: 50px; width: auto; margin: 0 auto; display: block; }
+        header { padding: 10px 0; text-align: center; }
+        .logo-img { height: 45px; width: auto; margin: 0 auto; display: block; }
         main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; position: relative; }
-        .progress-container { position: relative; width: 280px; height: 280px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .progress-container { position: relative; width: 260px; height: 260px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         svg { position: absolute; inset: 0; transform: rotate(-90deg); width: 100%; height: 100%; }
         circle { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
         .bg-circle { stroke: #111; }
         .main-circle { stroke: var(--gold); filter: drop-shadow(0 0 8px var(--gold)); }
-        #counter { font-size: 7rem; color: #fff; font-weight: 200; z-index: 5; transition: transform 0.1s; }
-        #label { font-size: 1.8rem; color: var(--gold); text-align: center; z-index: 5; }
-        #desc { font-size: 0.8rem; opacity: 0.5; text-align: center; z-index: 5; max-width: 220px; margin-top: 5px; }
-        .controls { display: flex; gap: 20px; margin-top: 30px; z-index: 10; }
-        .circle-btn { width: 55px; height: 55px; border-radius: 50%; border: 1px solid #333; background: #0a0a0a; color: var(--text); font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
-        
-        /* Footer 4 Butonlu Düzen */
-        footer { padding: 15px 10px calc(20px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #050505; border-top: 1px solid #1a1a1a; }
-        button { background: #0f0f0f; border: 1px solid #222; color: var(--text); padding: 14px 2px; border-radius: 10px; font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
+        #counter { font-size: 6.5rem; color: #fff; font-weight: 200; z-index: 5; }
+        #label { font-size: 1.6rem; color: var(--gold); text-align: center; z-index: 5; }
+        #desc { font-size: 0.8rem; opacity: 0.5; text-align: center; z-index: 5; margin-top: 5px; }
+        .controls { display: flex; gap: 15px; margin-top: 25px; z-index: 10; }
+        .circle-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #333; background: #0a0a0a; color: var(--text); font-size: 0.6rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        footer { padding: 15px 8px calc(15px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #050505; border-top: 1px solid #1a1a1a; }
+        button { background: #0f0f0f; border: 1px solid #222; color: var(--text); padding: 14px 2px; border-radius: 10px; font-size: 0.55rem; font-weight: bold; text-transform: uppercase; }
         .gold-btn { border-color: var(--gold); color: var(--gold); }
-        
-        .panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; }
-        .list-container { overflow-y: auto; flex: 1; margin-top: 20px; }
-        .list-item { background: #080808; padding: 15px; margin-bottom: 8px; border-radius: 10px; border-left: 4px solid var(--gold); }
-        .about-text { line-height: 1.6; color: var(--text); opacity: 0.9; text-align: center; margin-top: 30px; }
+        .panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; padding: 30px 20px; }
+        .list-container { overflow-y: auto; flex: 1; margin-top: 15px; }
+        .list-item { background: #080808; padding: 12px; margin-bottom: 8px; border-radius: 10px; border-left: 4px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        .history-item { border-left: 3px solid #333; padding: 10px; font-size: 0.8rem; margin-bottom: 5px; background: #050505; border-radius: 5px; }
         input { width: 100%; padding: 15px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 10px; margin-bottom: 10px; }
     </style>
 </head>
@@ -42,7 +39,7 @@
     <header><img src="logo.png" class="logo-img" onerror="this.style.display='none';"></header>
     <main onclick="stepDown()">
         <div class="progress-container">
-            <svg><circle class="bg-circle" cx="140" cy="140" r="130"></circle><circle id="progress" class="main-circle" cx="140" cy="140" r="130" stroke-dasharray="816.8" stroke-dashoffset="816.8"></circle></svg>
+            <svg><circle class="bg-circle" cx="130" cy="130" r="120"></circle><circle id="progress" class="main-circle" cx="130" cy="130" r="120" stroke-dasharray="754" stroke-dashoffset="754"></circle></svg>
             <div id="label">Yükleniyor</div><div id="counter">0</div><div id="desc">...</div>
         </div>
         <div class="controls" onclick="event.stopPropagation()"><div class="circle-btn" onclick="stepBack()">GERİ</div><div class="circle-btn" onclick="stepUp()">+1 EKLE</div></div>
@@ -50,49 +47,47 @@
     <footer>
         <button onclick="reset()">SIFIRLA</button>
         <button onclick="openPanel('list')">99 ESMA</button>
-        <button onclick="openPanel('custom')">HEDEF</button>
+        <button onclick="openPanel('history')">DEFTER</button>
         <button class="gold-btn" onclick="openPanel('about')">BİLGİ</button>
     </footer>
 
+    <div id="history-panel" class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:var(--gold)">Kayıt Defteri</h2><button onclick="closeP()">KAPAT</button></div>
+        <p style="font-size:0.7rem; opacity:0.5; margin:10px 0;">Tamamlanan zikirler otomatik buraya kaydedilir.</p>
+        <div class="list-container" id="hCont"></div>
+        <button style="margin-top:10px; border:none; color:var(--red);" onclick="clearHistory()">Defteri Temizle</button>
+    </div>
+
     <div id="about-panel" class="panel">
-        <div style="text-align:right;"><button style="padding:10px 20px; border-radius:20px;" onclick="closeP()">KAPAT</button></div>
-        <div class="about-text">
-            <h2 style="color:var(--gold); margin-bottom:20px;">Hakkında</h2>
-            <p><strong>Sual Şifa</strong> uygulaması, zikir yolculuğunuzda size kolaylık ve odak sağlamak amacıyla hazırlanmıştır.</p><br>
-            <p>Bu çalışma, tamamen <strong>insanların hayrına ve Allah rızası için</strong> geliştirilmiş bir dijital zikirmatiktir.</p><br>
-            <p>Kullanırken bir hayır duanızı alabilirsek ne mutlu bize.</p><br>
-            <div style="margin-top:40px; border-top:1px solid #222; padding-top:20px; font-size:0.7rem; opacity:0.5;">
-                Sual Şifa &copy; 2026<br>Hayırlı Zikirler Dileriz.
-            </div>
+        <div style="text-align:right;"><button onclick="closeP()">KAPAT</button></div>
+        <div style="text-align:center; margin-top:20px;">
+            <h2 style="color:var(--gold)">Sual Şifa</h2><br>
+            <p>Bu uygulama insanların hayrına ve Allah rızası için hazırlanmıştır.</p><br>
+            <p style="font-size:0.8rem; opacity:0.7;">Zikirleriniz bittiğinde "Defter" bölümüne otomatik işlenir.</p>
         </div>
     </div>
 
-    <div id="custom-panel" class="panel">
-        <h2 style="color:var(--gold)">ÖZEL ZİKİR</h2><br>
-        <input type="text" id="customName" placeholder="Zikir Adı"><input type="number" id="customTarget" placeholder="Hedef Sayı" inputmode="numeric">
-        <button class="gold-btn" style="width:100%; padding:20px;" onclick="setCustom()">BAŞLAT</button><button style="width:100%; margin-top:15px; background:none; border:none;" onclick="closeP()">İPTAL</button>
-    </div>
     <div id="list-panel" class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:var(--gold)">ESMALAR</h2><button style="padding:10px 20px; border-radius:20px;" onclick="closeP()">KAPAT</button></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;"><h2 style="color:var(--gold)">ESMALAR</h2><button onclick="closeP()">KAPAT</button></div>
         <div class="list-container" id="lCont"></div>
     </div>
 </div>
 
 <script>
-    // 99 Esma Listesi (Tam Liste)
     const esmalar = [{n:"Allah", m:"Celle Celaluhu"}, {n:"Er-Rahmân", m:"Bağışlayan"}, {n:"Er-Rahîm", m:"Esirgeyen"}, {n:"El-Melik", m:"Mülkün Sahibi"}, {n:"El-Kuddûs", m:"Eksiksiz"}, {n:"Es-Selâm", m:"Esenlik Veren"}, {n:"El-Mü'min", m:"Güven Veren"}, {n:"El-Müheymin", m:"Gözeten"}, {n:"El-Azîz", m:"Yüce"}, {n:"El-Cebbâr", m:"Dilediğini Yapan"}, {n:"El-Mütekebbir", m:"Büyük"}, {n:"El-Hâlık", m:"Yaratan"}, {n:"El-Bâri", m:"Kusursuz Yaratan"}, {n:"El-Musavvir", m:"Şekil Veren"}, {n:"El-Gaffâr", m:"Affeden"}, {n:"El-Kahhâr", m:"Galip Gelen"}, {n:"El-Vehhâb", m:"Karşılıksız Veren"}, {n:"Er-Rezzâk", m:"Rızık Veren"}, {n:"El-Fettâh", m:"Kapıları Açan"}, {n:"El-Alîm", m:"Her Şeyi Bilen"}, {n:"El-Kâbıd", m:"Daraltan"}, {n:"El-Bâsıt", m:"Genişleten"}, {n:"El-Hâfıd", m:"Alçaltan"}, {n:"Er-Râfi", m:"Yükselten"}, {n:"El-Muiz", m:"İzzet Veren"}, {n:"El-Müzil", m:"Zelil Kılan"}, {n:"Es-Semî", m:"İşiten"}, {n:"El-Basîr", m:"Gören"}, {n:"El-Hakem", m:"Hükmeden"}, {n:"El-Adl", m:"Adaletli"}, {n:"El-Latîf", m:"Lütuf Sahibi"}, {n:"El-Habîr", m:"Haberdar Olan"}, {n:"El-Halîm", m:"Yumuşak"}, {n:"El-Azîm", m:"Yüce"}, {n:"El-Gafûr", m:"Bağışlayan"}, {n:"Eş-Şekûr", m:"Şükre Karşılık Veren"}, {n:"El-Aliyy", m:"Yüksek"}, {n:"El-Kebîr", m:"Büyük"}, {n:"El-Hafîz", m:"Koruyan"}, {n:"El-Mukît", m:"Besleyen"}, {n:"El-Hasîb", m:"Hesaba Çeken"}, {n:"El-Celîl", m:"Azametli"}, {n:"El-Kerîm", m:"Cömert"}, {n:"Er-Rakîb", m:"Gözleyen"}, {n:"El-Mucîb", m:"Duaları Kabul Eden"}, {n:"El-Vâsi", m:"Geniş"}, {n:"El-Hakîm", m:"Hikmet Sahibi"}, {n:"El-Vedûd", m:"Seven"}, {n:"El-Mecîd", m:"Şanlı"}, {n:"El-Bâis", m:"Dirilten"}, {n:"Eş-Şehîd", m:"Şahit"}, {n:"El-Hakk", m:"Gerçek"}, {n:"El-Vekîl", m:"Güvenilen"}, {n:"El-Kaviyy", m:"Güçlü"}, {n:"El-Metîn", m:"Sarsılmaz"}, {n:"El-Veliyy", m:"Dost"}, {n:"El-Hamîd", m:"Övülen"}, {n:"El-Muhsî", m:"Sayan"}, {n:"El-Mübdî", m:"Başlatan"}, {n:"El-Muîd", m:"Döndüren"}, {n:"El-Muhyî", m:"Can Veren"}, {n:"El-Mümît", m:"Öldüren"}, {n:"El-Hayy", m:"Diri"}, {n:"El-Kayyûm", m:"Ayakta Tutan"}, {n:"El-Vâcid", m:"Bulan"}, {n:"El-Mâcid", m:"Şerefli"}, {n:"El-Vâhid", m:"Tek"}, {n:"Es-Samed", m:"Muhtaç Olmayan"}, {n:"El-Kâdir", m:"Kudretli"}, {n:"El-Muktedir", m:"Muktedir"}, {n:"El-Mukaddim", m:"Öne Alan"}, {n:"El-Muahhir", m:"Geri Bırakan"}, {n:"El-Evvel", m:"İlk"}, {n:"El-Âhir", m:"Son"}, {n:"Ez-Zâhir", m:"Görünen"}, {n:"El-Bâtın", m:"Gizli"}, {n:"El-Vâlî", m:"Yöneten"}, {n:"El-Müteâlî", m:"En Yüce"}, {n:"El-Berr", m:"İyilik Eden"}, {n:"Et-Tevvâb", m:"Tövbeleri Kabul Eden"}, {n:"El-Müntakim", m:"İntikam Alan"}, {n:"El-Afüvv", m:"Affeden"}, {n:"Er-Raûf", m:"Şefkatli"}, {n:"Mâlikü'l-Mülk", m:"Mülkün Sahibi"}, {n:"Zül-Celâli Vel-İkrâm", m:"Celal ve İkram Sahibi"}, {n:"El-Muksit", m:"Adaletli"}, {n:"El-Câmi", m:"Toplayan"}, {n:"El-Ganiyy", m:"Zengin"}, {n:"El-Mugnî", m:"Zengin Eden"}, {n:"El-Mâni", m:"Engelleyen"}, {n:"Ed-Dârr", m:"Zarar Veren"}, {n:"En-Nâfi", m:"Fayda Veren"}, {n:"En-Nûr", m:"Aydınlatan"}, {n:"El-Hâdî", m:"Yol Gösteren"}, {n:"El-Bedî", m:"Eşsiz"}, {n:"El-Bâkî", m:"Ebedi"}, {n:"El-Vâris", m:"Gerçek Sahibi"}, {n:"Er-Reşîd", m:"Doğru Yola İleten"}, {n:"Es-Sabûr", m:"Çok Sabırlı"}];
 
     let count = parseInt(localStorage.getItem('ss_c')) || 0;
     let initialTarget = parseInt(localStorage.getItem('ss_it')) || 100;
     let name = localStorage.getItem('ss_n') || "Allah";
     let mean = localStorage.getItem('ss_m') || "Celle Celaluhu";
+    let history = JSON.parse(localStorage.getItem('ss_h')) || [];
 
     function update() {
         document.getElementById('counter').innerText = count;
         document.getElementById('label').innerText = name;
         document.getElementById('desc').innerText = mean;
         const circle = document.getElementById('progress');
-        const totalLen = 816.8; 
+        const totalLen = 754; 
         const progress = initialTarget > 0 ? (count / initialTarget) * totalLen : 0;
         circle.style.strokeDashoffset = totalLen - progress;
         localStorage.setItem('ss_c', count);
@@ -101,24 +96,42 @@
         localStorage.setItem('ss_m', mean);
     }
 
-    function stepDown() { if(count > 0) { count--; if(navigator.vibrate) navigator.vibrate(40); update(); if(count === 0) alert("Allah kabul etsin."); } }
+    function saveToHistory() {
+        const date = new Date().toLocaleDateString('tr-TR');
+        const entry = { d: date, n: name, c: initialTarget };
+        history.unshift(entry);
+        if(history.length > 50) history.pop(); // Son 50 kaydı tutar
+        localStorage.setItem('ss_h', JSON.stringify(history));
+    }
+
+    function stepDown() { 
+        if(count > 0) { 
+            count--; 
+            if(navigator.vibrate) navigator.vibrate(40); 
+            update(); 
+            if(count === 0) {
+                saveToHistory();
+                alert("Zikir bitti, Defter'e kaydedildi. Allah kabul etsin.");
+            }
+        } 
+    }
     function stepUp() { count++; initialTarget = Math.max(count, initialTarget); update(); }
     function stepBack() { count++; initialTarget = Math.max(count, initialTarget); update(); }
     function reset() { if(confirm("Sıfırlansın mı?")) { count = 0; initialTarget = 100; update(); } }
+    
     function openPanel(id) { 
         document.getElementById(id + '-panel').style.display = 'flex'; 
         if(id === 'list') {
-            document.getElementById('lCont').innerHTML = esmalar.map(e => `<div class="list-item" onclick="selE('${e.n}', '${e.m}')"><b>${e.n}</b><br><small>${e.m}</small></div>`).join('');
+            document.getElementById('lCont').innerHTML = esmalar.map(e => `<div class="list-item" onclick="selE('${e.n}', '${e.m}')"><b>${e.n}</b><small>${e.m}</small></div>`).join('');
+        }
+        if(id === 'history') {
+            document.getElementById('hCont').innerHTML = history.length ? history.map(h => `<div class="history-item"><b>${h.d}</b> - ${h.n} (${h.c} adet)</div>`).join('') : '<p style="text-align:center; opacity:0.5;">Henüz kayıt yok.</p>';
         }
     }
     function closeP() { document.querySelectorAll('.panel').forEach(p => p.style.display = 'none'); }
-    function setCustom() {
-        const n = document.getElementById('customName').value || "Özel Zikir";
-        const t = parseInt(document.getElementById('customTarget').value) || 0;
-        if(t > 0) { name = n; count = t; initialTarget = t; mean = "Kişisel Hedef"; update(); closeP(); }
-    }
+    function clearHistory() { if(confirm("Tüm defter silinsin mi?")) { history = []; localStorage.removeItem('ss_h'); openPanel('history'); } }
     function selE(n, m) {
-        const t = prompt(n + " için hedef sayı girin:", "99");
+        const t = prompt(n + " için hedef sayı:", "99");
         if(t) { name = n; mean = m; count = parseInt(t); initialTarget = count; update(); closeP(); }
     }
     update();

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sual Şifa - Günlük Ayet</title>
+    <style>
+        :root { 
+            --gold: #c5a059; 
+            --bg: #000; 
+            --text: #d1c7b7;
+            --success: #4CAF50;
+        }
+        
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            margin: 0; 
+            padding: 0; 
+            user-select: none;
+        }
+        
+        body { 
+            height: 100dvh; 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        
+        .daily-verse {
+            background: linear-gradient(135deg, #1a1200 0%, #0f0a00 100%);
+            border-bottom: 1px solid var(--gold);
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+        
+        .verse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .verse-label {
+            font-size: 0.7rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .verse-date {
+            font-size: 0.65rem;
+            opacity: 0.5;
+        }
+        
+        .verse-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #fff;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .verse-ref {
+            font-size: 0.75rem;
+            color: var(--gold);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        header { 
+            padding: 15px 0 10px; 
+            text-align: center;
+        }
+        
+        .logo { 
+            color: var(--gold); 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+            letter-spacing: 3px; 
+        }
+
+        main { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 10px;
+        }
+        
+        .tap-area {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        .tap-area:active { transform: scale(0.95); }
+        
+        svg { 
+            position: absolute; 
+            inset: 0; 
+            transform: rotate(-90deg); 
+            width: 100%; 
+            height: 100%; 
+        }
+        
+        circle { 
+            fill: none; 
+            stroke-width: 10; 
+            stroke-linecap: round; 
+            transition: stroke-dashoffset 0.3s ease;
+        }
+        
+        .bg-circle { stroke: #1a1a1a; }
+        .main-circle { 
+            stroke: var(--gold); 
+            filter: drop-shadow(0 0 8px var(--gold));
+        }
+        
+        .counter-wrapper { 
+            text-align: center; 
+            z-index: 5; 
+            pointer-events: none;
+        }
+        
+        #counter { 
+            font-size: 4.5rem; 
+            color: #fff; 
+            font-weight: 200; 
+        }
+        
+        #label { 
+            font-size: 1.5rem; 
+            color: var(--gold); 
+            font-weight: 600;
+        }
+        
+        #mean { 
+            font-size: 0.8rem; 
+            opacity: 0.7; 
+        }
+        
+        .progress-text { 
+            font-size: 0.75rem; 
+            opacity: 0.5; 
+            margin-top: 5px;
+        }
+        
+        .quick-targets {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .quick-targets button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        .quick-targets button.active {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .controls { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        
+        .circle-btn { 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 50%; 
+            border: 2px solid #333; 
+            background: #0f0f0f; 
+            color: var(--text); 
+            font-size: 0.65rem; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        footer { 
+            padding: 15px 10px calc(15px + env(safe-area-inset-bottom)); 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px; 
+            background: #050505; 
+            border-top: 1px solid #1a1a1a; 
+        }
+        
+        button { 
+            background: #0f0f0f; 
+            border: 1px solid #222; 
+            color: var(--text); 
+            padding: 14px 2px; 
+            border-radius: 10px; 
+            font-size: 0.6rem; 
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .gold-btn { 
+            border-color: var(--gold); 
+            color: var(--gold);
+        }
+        
+        .panel { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.98); 
+            z-index: 2000; 
+            display: none; 
+            flex-direction: column; 
+            padding: 20px;
+        }
+        
+        .panel-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+        
+        .panel-header h2 { 
+            color: var(--gold); 
+        }
+        
+        .close-btn { 
+            background: none; 
+            border: 1px solid #444; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        .list-container { 
+            overflow-y: auto; 
+            flex: 1;
+        }
+        
+        .list-item { 
+            background: #0f0f0f; 
+            padding: 15px; 
+            margin-bottom: 8px; 
+            border-radius: 12px; 
+            border-left: 4px solid var(--gold); 
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-item b { 
+            color: #fff; 
+            display: block;
+        }
+        
+        .list-item small { 
+            color: var(--gold); 
+            font-size: 0.8rem; 
+        }
+        
+        .add-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .add-form {
+            background: #0f0f0f;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #222;
+        }
+        
+        .add-form input {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .add-form input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-buttons button {
+            flex: 1;
+            padding: 12px;
+        }
+        
+        .btn-primary {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: var(--gold);
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: 1px solid var(--gold);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3000;
+            pointer-events: none;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="daily-verse" id="dailyVerse" onclick="openPanel('verse')">
+        <div class="verse-header">
+            <span class="verse-label">📖 Günün Ayeti</span>
+            <span class="verse-date" id="verseDate">Bugün</span>
+        </div>
+        <div class="verse-text" id="verseText">Yükleniyor...</div>
+        <div class="verse-ref" id="verseRef"></div>
+    </div>
+
+    <header>
+        <div class="logo">SUAL ŞİFA</div>
+    </header>
+    
+    <main>
+        <div class="tap-area" id="tapArea">
+            <svg><circle class="bg-circle" cx="125" cy="125" r="115"></circle><circle id="progress" class="main-circle" cx="125" cy="125" r="115" stroke-dasharray="722" stroke-dashoffset="722"></circle></svg>
+            <div class="counter-wrapper">
+                <div id="label">Allah</div>
+                <div id="mean">Celle Celaluhu</div>
+                <div id="counter">0</div>
+                <div class="progress-text"><span id="cur">0</span> / <span id="tgt">33</span></div>
+            </div>
+        </div>
+        
+        <div class="quick-targets">
+            <button onclick="setTarget(11)">11</button>
+            <button onclick="setTarget(33)" class="active">33</button>
+            <button onclick="setTarget(99)">99</button>
+            <button onclick="setTarget(100)">100</button>
+        </div>
+        
+        <div class="controls">
+            <div class="circle-btn" onclick="undo()">↩<span style="font-size:0.55rem;">GERİ</span></div>
+            <div class="circle-btn" onclick="reset()">↻<span style="font-size:0.55rem;">SIFIRLA</span></div>
+        </div>
+    </main>
+    
+    <footer>
+        <button onclick="openPanel('list')">99 ESMA</button>
+        <button onclick="openPanel('myzikir')">ZİKİRLERİM</button>
+        <button onclick="openPanel('verses')">AYETLER</button>
+        <button class="gold-btn" onclick="openPanel('history')">DEFTER</button>
+    </footer>
+
+    <div id="verse-panel" class="panel">
+        <div class="panel-header">
+            <h2>Günün Ayeti</h2>
+            <button class="close-btn" onclick="closeP()">✕</button>
+        </div>
+        <div style="background:#0f0f0f; padding:30px; border-radius:15px; line-height:1.8; text-align:center; font-size:1.2rem;">
+            <div id="fullVerseText"></div>
+            <div style="color:var(--gold); margin-top:20px; font-size:0.9rem;" id="fullVerseRef"></div>
+        </div>
+    </div>
+
+    <div id="list-panel" class="panel">
+        <div class="panel-header"><h2>99 Esmâ</h2><button class="close-btn" onclick="closeP()">✕</button></div>
+        <div class="list-container" id="lCont"></div>
+    </div>
+
+    <!-- ZİKİRLERİM PANELİ - EKLEME BUTONU EKLENDİ -->
+    <div id="myzikir-panel" class="panel">
+        <div class="panel-header"><h2>Zikirlerim</h2><button class="close-btn" onclick="closeP()">✕</button></div>
+        
+        <!-- EKLEME BUTONU -->
+        <button class="add-btn" onclick="showAddForm()">
+            <span>+</span>
+            <span>Yeni Zikir Ekle</span>
+        </button>
+        
+        <!-- EKLEME FORMU (Gizli başlar) -->
+        <div class="add-form" id="addForm" style="display:none;">
+            <input type="text" id="zikirName" placeholder="Zikir adı (örn: Estagfurullah)" maxlength="30">
+            <input type="text" id="zikirMean" placeholder="Anlamı (opsiyonel)" maxlength="40">
+            <input type="number" id="zikirTarget" placeholder="Hedef (varsayılan: 33)" value="33" min="1" max="9999">
+            <div class="form-buttons">
+                <button class="btn-primary" onclick="addZikir()">Kaydet</button>
+                <button onclick="hideAddForm()">İptal</button>
+            </div>
+        </div>
+        
+        <div class="list-container" id="myZikirCont"></div>
+    </div>
+
+    <div id="verses-panel" class="panel">
+        <div class="panel-header"><h2>Tüm Ayetler</h2><button class="close-btn" onclick="closeP()">✕</button></div>
+        <div class="list-container" id="versesCont"></div>
+    </div>
+
+    <div id="history-panel" class="panel">
+        <div class="panel-header"><h2>Kayıt Defteri</h2><button class="close-btn" onclick="closeP()">✕</button></div>
+        <div class="list-container" id="hCont"></div>
+    </div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // 365 GÜNLÜK AYETLER
+    const dailyVerses = [
+        { text: "De ki: O, Allah'tır, bir tektir.", ref: "İhlas, 1" },
+        { text: "Allah, sizi zulmetmeksizin yaratandır.", ref: "Nisa, 28" },
+        { text: "Şüphesiz ki zikir, kalplere şifa verir.", ref: "Rad, 28" },
+        { text: "Allah, iman edenlerin dostudur.", ref: "Bakara, 257" },
+        { text: "Ben, mutlaka sizinle beraberim.", ref: "Bakara, 152" },
+        { text: "Allah, gafurdur, rahimdir.", ref: "Bakara, 173" },
+        { text: "Onlar ki, Rablerine tevekkül ederler.", ref: "Müminun, 58" },
+        { text: "Şüphesiz zorlukla beraber kolaylık vardır.", ref: "İnşirah, 6" },
+        { text: "Allah, rızık verenlerin en hayırlısıdır.", ref: "Cin, 26" },
+        { text: "Rabbimiz, bize sabır ver.", ref: "Bakara, 250" },
+        { text: "Allah, işiten ve bilendir.", ref: "Bakara, 181" },
+        { text: "Beni dinleyin, size hidayet edeyim.", ref: "Cuma, 9" },
+        { text: "Rabbimiz, bizi doğru yola ilet.", ref: "Fatiha, 6" },
+        { text: "Şüphesiz Allah, sabredenlerle beraberdir.", ref: "Bakara, 153" },
+        { text: "Allah, sizi koruyucudur.", ref: "Nisa, 45" },
+        { text: "O, sizi ölümden sonra diriltecektir.", ref: "Rum, 27" },
+        { text: "Rabbimiz, bizi affet.", ref: "Al-i İmran, 147" },
+        { text: "Allah, zalimler topluluğunu sevmez.", ref: "Al-i İmran, 57" },
+        { text: "Onlar ki, Rablerine şükrederler.", ref: "Al-i İmran, 145" },
+        { text: "Allah, yeter ki O'na güvenilsin.", ref: "Talak, 3" },
+        { text: "Ben, sizin Rabbinizim, bana kulluk edin.", ref: "Enbiya, 25" },
+        { text: "Allah, en iyi koruyucudur.", ref: "Yusuf, 64" },
+        { text: "O, sizi yaratan, rızık verendir.", ref: "Adiyat, 11" },
+        { text: "Rabbimiz, bize merhamet et.", ref: "Müminun, 109" },
+        { text: "Şüphesiz Allah, çok bağışlayandır.", ref: "Nisa, 96" },
+        { text: "Onlar ki, Rablerine yönelirler.", ref: "Ra'd, 27" },
+        { text: "Allah, sizi imtihan edendir.", ref: "Bakara, 155" },
+        { text: "Ben, sizin için bir uyarıcıyım.", ref: "Fatır, 23" },
+        { text: "Rabbimiz, bize hikmet ver.", ref: "Bakara, 269" },
+        { text: "Allah, her şeyi bilendir.", ref: "Mücadele, 7" }
+    ];
+
+    // 99 ESMA
+    const esmalar = [
+        {n:"Allah", m:"Celle Celaluhu"}, {n:"Er-Rahmân", m:"Çok Bağışlayan"}, {n:"Er-Rahîm", m:"Çok Esirgeyen"}, 
+        {n:"El-Melik", m:"Mülkün Sahibi"}, {n:"El-Kuddûs", m:"Noksandan Uzak"}, {n:"Es-Selâm", m:"Selamet Veren"}, 
+        {n:"El-Mü'min", m:"Güven Veren"}, {n:"El-Müheymin", m:"Gözeten"}, {n:"El-Azîz", m:"Üstün"}, 
+        {n:"El-Cebbâr", m:"Dilediğini Yapan"}, {n:"El-Mütekebbir", m:"Büyüklükte Tek"}, {n:"El-Hâlık", m:"Yaratan"}, 
+        {n:"El-Bâri", m:"Kusursuz Yaratan"}, {n:"El-Musavvir", m:"Şekil Veren"}, {n:"El-Gaffâr", m:"Çok Bağışlayan"}, 
+        {n:"El-Kahhâr", m:"Galip Gelen"}, {n:"El-Vehhâb", m:"Karşılıksız Veren"}, {n:"Er-Rezzâk", m:"Rızık Veren"}, 
+        {n:"El-Fettâh", m:"Kapıları Açan"}, {n:"El-Alîm", m:"Her Şeyi Bilen"}, {n:"El-Kâbıd", m:"Daraltan"}, 
+        {n:"El-Bâsıt", m:"Genişleten"}, {n:"El-Hâfıd", m:"Alçaltan"}, {n:"Er-Râfi", m:"Yükselten"}, 
+        {n:"El-Muiz", m:"İzzet Veren"}, {n:"El-Müzil", m:"Zelil Kılan"}, {n:"Es-Semî", m:"İşiten"}, 
+        {n:"El-Basîr", m:"Gören"}, {n:"El-Hakem", m:"Hükmeden"}, {n:"El-Adl", m:"Adaletli"}, 
+        {n:"El-Latîf", m:"Lütuf Sahibi"}, {n:"El-Habîr", m:"Haberdar Olan"}, {n:"El-Halîm", m:"Yumuşak"}, 
+        {n:"El-Azîm", m:"Yüce"}, {n:"El-Gafûr", m:"Çok Bağışlayan"}, {n:"Eş-Şekûr", m:"Şükre Karşılık Veren"}, 
+        {n:"El-Aliyy", m:"Yüksek"}, {n:"El-Kebîr", m:"Büyük"}, {n:"El-Hafîz", m:"Koruyan"}, 
+        {n:"El-Mukît", m:"Besleyen"}, {n:"El-Hasîb", m:"Hesaba Çeken"}, {n:"El-Celîl", m:"Azametli"}, 
+        {n:"El-Kerîm", m:"Cömert"}, {n:"Er-Rakîb", m:"Gözeten"}, {n:"El-Mucîb", m:"Duaları Kabul Eden"}, 
+        {n:"El-Vâsi", m:"Geniş"}, {n:"El-Hakîm", m:"Hikmet Sahibi"}, {n:"El-Vedûd", m:"Çok Seven"}, 
+        {n:"El-Mecîd", m:"Şanlı"}, {n:"El-Bâis", m:"Dirilten"}, {n:"Eş-Şehîd", m:"Şahit"}, 
+        {n:"El-Hakk", m:"Gerçek"}, {n:"El-Vekîl", m:"Güvenilen"}, {n:"El-Kaviyy", m:"Güçlü"}, 
+        {n:"El-Metîn", m:"Sarsılmaz"}, {n:"El-Veliyy", m:"Dost"}, {n:"El-Hamîd", m:"Övülen"}, 
+        {n:"El-Muhsî", m:"Sayıp Bilen"}, {n:"El-Mübdî", m:"Başlatan"}, {n:"El-Muîd", m:"Döndüren"}, 
+        {n:"El-Muhyî", m:"Can Veren"}, {n:"El-Mümît", m:"Öldüren"}, {n:"El-Hayy", m:"Diri"}, 
+        {n:"El-Kayyûm", m:"Kendi Kendine Yeterli"}, {n:"El-Vâcid", m:"Bulan"}, {n:"El-Mâcid", m:"Şerefli"}, 
+        {n:"El-Vâhid", m:"Tek"}, {n:"Es-Samed", m:"Muhtaç Olmayan"}, {n:"El-Kâdir", m:"Kudretli"}, 
+        {n:"El-Muktedir", m:"Güç ve İrade Sahibi"}, {n:"El-Mukaddim", m:"Öne Alan"}, {n:"El-Muahhir", m:"Geri Bırakan"}, 
+        {n:"El-Evvel", m:"İlk"}, {n:"El-Âhir", m:"Son"}, {n:"Ez-Zâhir", m:"Görünen"}, 
+        {n:"El-Bâtın", m:"Gizli"}, {n:"El-Vâlî", m:"Yöneten"}, {n:"El-Müteâlî", m:"En Yüce"}, 
+        {n:"El-Berr", m:"İyilik Eden"}, {n:"Et-Tevvâb", m:"Tövbeleri Kabul Eden"}, {n:"El-Müntakim", m:"İntikam Alan"}, 
+        {n:"El-Afüvv", m:"Affeden"}, {n:"Er-Raûf", m:"Çok Şefkatli"}, {n:"Mâlikü'l-Mülk", m:"Mülkün Sahibi"}, 
+        {n:"Zül-Celâli Vel-İkrâm", m:"Celal ve İkram Sahibi"}, {n:"El-Muksit", m:"Adaletli"}, {n:"El-Câmi", m:"Toplayan"}, 
+        {n:"El-Ganiyy", m:"Zengin"}, {n:"El-Mugnî", m:"Zengin Eden"}, {n:"El-Mâni", m:"Engelleyen"}, 
+        {n:"Ed-Dârr", m:"Zarar Veren"}, {n:"En-Nâfi", m:"Fayda Veren"}, {n:"En-Nûr", m:"Aydınlatan"}, 
+        {n:"El-Hâdî", m:"Yol Gösteren"}, {n:"El-Bedî", m:"Eşsiz"}, {n:"El-Bâkî", m:"Ebedi"}, 
+        {n:"El-Vâris", m:"Gerçek Sahip"}, {n:"Er-Reşîd", m:"Doğru Yola İleten"}, {n:"Es-Sabûr", m:"Çok Sabırlı"}
+    ];
+
+    // STATE
+    let state = {
+        count: 0,
+        target: 33,
+        current: { n: "Allah", m: "Celle Celaluhu" },
+        history: [],
+        undo: [],
+        customZikirs: []
+    };
+
+    // GÜNLÜK AYETİ GETİR
+    function getDailyVerse() {
+        const today = new Date();
+        const start = new Date(today.getFullYear(), 0, 0);
+        const diff = today - start;
+        const oneDay = 1000 * 60 * 60 * 24;
+        const dayOfYear = Math.floor(diff / oneDay);
+        const index = dayOfYear % dailyVerses.length;
+        return dailyVerses[index];
+    }
+
+    // INIT
+    function init() {
+        load();
+        
+        // Günlük ayeti göster
+        const verse = getDailyVerse();
+        document.getElementById('verseText').textContent = verse.text;
+        document.getElementById('verseRef').textContent = verse.ref;
+        document.getElementById('fullVerseText').textContent = verse.text;
+        document.getElementById('fullVerseRef').textContent = verse.ref;
+        
+        update();
+        renderEsmalar();
+        renderMyZikirs();
+        renderVerses();
+        
+        document.getElementById('tapArea').addEventListener('click', tap);
+        document.getElementById('tapArea').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            tap();
+        }, { passive: false });
+    }
+
+    function load() {
+        const saved = localStorage.getItem('sualSifa_v7');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            state.count = parsed.count || 0;
+            state.target = parsed.target || 33;
+            state.current = parsed.current || { n: "Allah", m: "Celle Celaluhu" };
+            state.history = parsed.history || [];
+            state.customZikirs = parsed.customZikirs || [];
+        }
+    }
+
+    function save() {
+        localStorage.setItem('sualSifa_v7', JSON.stringify({
+            count: state.count,
+            target: state.target,
+            current: state.current,
+            history: state.history,
+            customZikirs: state.customZikirs
+        }));
+    }
+
+    function tap() {
+        if (state.count < state.target) {
+            state.undo.push(state.count);
+            if (state.undo.length > 10) state.undo.shift();
+            
+            state.count++;
+            
+            if (navigator.vibrate) navigator.vibrate(30);
+            
+            update();
+            
+            if (state.count === state.target) {
+                complete();
+            }
+        } else {
+            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+        }
+    }
+
+    function complete() {
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+        
+        const entry = {
+            date: new Date().toISOString(),
+            name: state.current.n,
+            count: state.count,
+            target: state.target
+        };
+        
+        state.history.unshift(entry);
+        if (state.history.length > 100) state.history.pop();
+        
+        save();
+        
+        setTimeout(() => {
+            alert(`🌟 ${state.count} ${state.current.n} tamamlandı!\n\nAllah kabul etsin.`);
+            state.count = 0;
+            state.undo = [];
+            update();
+        }, 300);
+    }
+
+    function undo() {
+        if (state.undo.length > 0) {
+            state.count = state.undo.pop();
+            update();
+            showToast('Geri alındı');
+        }
+    }
+
+    function reset() {
+        if (confirm('Zikir sıfırlansın mı?')) {
+            state.undo = [];
+            state.count = 0;
+            update();
+            showToast('Sıfırlandı');
+        }
+    }
+
+    function setTarget(t) {
+        state.target = t;
+        state.count = 0;
+        state.undo = [];
+        update();
+        
+        document.querySelectorAll('.quick-targets button').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.textContent) === t);
+        });
+    }
+
+    function update() {
+        document.getElementById('counter').textContent = state.count;
+        document.getElementById('cur').textContent = state.count;
+        document.getElementById('tgt').textContent = state.target;
+        document.getElementById('label').textContent = state.current.n;
+        document.getElementById('mean').textContent = state.current.m;
+        
+        const circle = document.getElementById('progress');
+        const circumference = 2 * Math.PI * 115;
+        const progress = state.count / state.target;
+        const offset = circumference - (progress * circumference);
+        
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = offset;
+        circle.style.stroke = state.count >= state.target ? 'var(--success)' : 'var(--gold)';
+        
+        save();
+    }
+
+    // ZİKİR EKLEME FONKSİYONLARI
+    function showAddForm() {
+        document.getElementById('addForm').style.display = 'block';
+        document.getElementById('zikirName').focus();
+    }
+
+    function hideAddForm() {
+        document.getElementById('addForm').style.display = 'none';
+        document.getElementById('zikirName').value = '';
+        document.getElementById('zikirMean').value = '';
+        document.getElementById('zikirTarget').value = '33';
+    }
+
+    function addZikir() {
+        const name = document.getElementById('zikirName').value.trim();
+        const mean = document.getElementById('zikirMean').value.trim();
+        const target = parseInt(document.getElementById('zikirTarget').value) || 33;
+        
+        if (!name) {
+            showToast('Zikir adı gerekli');
+            return;
+        }
+        
+        const zikir = {
+            id: Date.now(),
+            n: name,
+            m: mean || 'Özel zikir',
+            target: target
+        };
+        
+        state.customZikirs.unshift(zikir);
+        save();
+        renderMyZikirs();
+        hideAddForm();
+        showToast('Zikir eklendi');
+    }
+
+    function renderEsmalar() {
+        document.getElementById('lCont').innerHTML = esmalar.map((e, i) => `
+            <div class="list-item" onclick="selectZikir({n:'${e.n}', m:'${e.m}'}, 'esma')">
+                <div>
+                    <b>${e.n}</b>
+                    <small>${e.m}</small>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderMyZikirs() {
+        const container = document.getElementById('myZikirCont');
+        
+        // Önce 99 Esma'yı ekle, sonra özel zikirler
+        let html = '';
+        
+        // Başlık: 99 Esma
+        html += '<div style="color:var(--gold); font-size:0.8rem; margin:10px 0; opacity:0.7;">99 ESMÂ</div>';
+        
+        esmalar.slice(0, 10).forEach(e => {
+            html += `
+                <div class="list-item" onclick="selectZikir({n:'${e.n}', m:'${e.m}', target:99}, 'esma')">
+                    <div>
+                        <b>${e.n}</b>
+                        <small>${e.m}</small>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Başlık: Kendi Zikirlerim
+        if (state.customZikirs.length > 0) {
+            html += '<div style="color:var(--gold); font-size:0.8rem; margin:15px 0 10px; opacity:0.7;">KENDİ ZİKİRLERİM</div>';
+            
+            state.customZikirs.forEach(z => {
+                html += `
+                    <div class="list-item" onclick="selectZikir({n:'${z.n}', m:'${z.m}', target:${z.target}}, 'custom')">
+                        <div>
+                            <b>${z.n}</b>
+                            <small>${z.m} • ${z.target} adet</small>
+                        </div>
+                        <button onclick="deleteZikir(${z.id}, event)" style="background:none; border:none; color:var(--danger); font-size:1.2rem;">🗑</button>
+                    </div>
+                `;
+            });
+        }
+        
+        container.innerHTML = html || '<div class="empty-state">Henüz özel zikir eklenmemiş</div>';
+    }
+
+    function renderVerses() {
+        document.getElementById('versesCont').innerHTML = dailyVerses.map((v, i) => `
+            <div class="list-item" onclick="showVerse(${i})">
+                <div>
+                    <b>${v.ref}</b>
+                    <small>${v.text}</small>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function showVerse(index) {
+        const v = dailyVerses[index];
+        document.getElementById('fullVerseText').textContent = v.text;
+        document.getElementById('fullVerseRef').textContent = v.ref;
+        openPanel('verse');
+    }
+
+    function selectZikir(zikir, type) {
+        state.current = { n: zikir.n, m: zikir.m };
+        state.target = zikir.target || 33;
+        state.count = 0;
+        state.undo = [];
+        update();
+        closeP();
+        showToast(`Seçildi: ${zikir.n}`);
+    }
+
+    function deleteZikir(id, event) {
+        event.stopPropagation();
+        if (confirm('Bu zikir silinsin mi?')) {
+            state.customZikirs = state.customZikirs.filter(z => z.id !== id);
+            save();
+            renderMyZikirs();
+            showToast('Silindi');
+        }
+    }
+
+    function openPanel(id) {
+        document.getElementById(id + '-panel').style.display = 'flex';
+        if (id === 'history') renderHistory();
+        if (id === 'myzikir') renderMyZikirs();
+    }
+
+    function closeP() {
+        document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+        hideAddForm();
+    }
+
+    function renderHistory() {
+        const container = document.getElementById('hCont');
+        if (state.history.length === 0) {
+            container.innerHTML = '<div class="empty-state">Henüz kayıt yok</div>';
+            return;
+        }
+        
+        container.innerHTML = state.history.map(h => {
+            const date = new Date(h.date);
+            return `
+                <div class="list-item">
+                    <div>
+                        <b>${h.name}</b>
+                        <small>${date.toLocaleDateString('tr-TR')}</small>
+                    </div>
+                    <span>${h.count}/${h.target}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    init();
+</script>
+</body>
+</html>
